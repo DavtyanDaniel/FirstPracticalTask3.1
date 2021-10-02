@@ -33,7 +33,7 @@ def write_the_file(filtered_stars: list):
         f.write(header)
 
         for star in filtered_stars:
-            row_data = f'{star.stars_id}' + ',' + \
+            row_data = f'{star.star_id}' + ',' + \
                        f'{star.ra},' + \
                        f'{star.dec},' + \
                        f'{star.mag},' + \

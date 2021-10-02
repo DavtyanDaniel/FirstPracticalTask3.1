@@ -1,5 +1,9 @@
+from random import randint
+
+import parser
 from stars import Stars
 import constants
+
 
 def computing_range_of_square(ra, dec, fov_h, fov_v) -> tuple:
     """
@@ -45,17 +49,50 @@ def checking_number_of_stars(filtered_stars: list, number_of_stars) -> int:
     return int(number_of_stars)
 
 
-def distance_calculation(filtered_stars: list, ra, dec, number_of_stars) -> list:
-    """
-    Function is calculating the distance of given number of stars
-    """
-    number_of_stars = checking_number_of_stars(filtered_stars, number_of_stars)
-    i = 0
-    result = []
-    while i < number_of_stars:
-        result.append(filtered_stars[i])
-        distance = euclidean_distance(filtered_stars[i], ra, dec)
-        result[i].append(distance)
-        i += 1
-    return result
+def quicksort(list_of_objects: list, getter, reverse: bool) -> list:
+        """
+        a quicksort sorting algorithm that takes an array, getter function, and sort direction and returns a sorted array
+        """
+
+        if len(list_of_objects) < 2:
+            return list_of_objects
+        left = []
+        same = []
+        right = []
+        delimiter = getter(list_of_objects[randint(0, len(list_of_objects) - 1)])
+
+        for item in list_of_objects:
+            value = getter(item)
+            if value > delimiter:
+                if reverse is False:
+                    left.append(item)
+                else:
+                    right.append(item)
+            elif value == delimiter:
+                same.append(item)
+            elif value < delimiter:
+                if reverse is False:
+                    right.append(item)
+                else:
+                    left.append(item)
+        sorted_array = quicksort(left, getter, reverse) + same + quicksort(right, getter, reverse)
+
+        return sorted_array
+
+
+def get_mag(item):
+    return item.mag
+
+
+def get_dis(item):
+    return item.euclidean_distance
+
+
+def mag_slicing(ls: list, n: int) -> list:
+    return ls[:n]
+
+
+if __name__ == "__main__":
+    range1 = computing_range_of_square(40, 50, 20, 30)
+    print(quicksort(parser.open_and_parse_file('337.all.tsv', range1[0], range1[1], range1[2], range1[3]), get_mag, True))
 
